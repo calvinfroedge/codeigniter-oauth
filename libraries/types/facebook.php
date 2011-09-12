@@ -16,7 +16,6 @@ class Facebook
 	{
 		$this->oauth = $oauth;
 		$this->oauth->ci->load->config('facebook', TRUE);
-		$this->oauth->ci->load->helper('url');
 	}
 
 	/*
@@ -34,12 +33,14 @@ class Facebook
 			'scope' => 'email'
 		);
 		
-		$url = $this->oauth->ci->config->item('oauth_endpoint', 'facebook').http_build_query($params);
+		$url = $this->oauth->ci->config->item('authorize_endpoint', 'facebook').http_build_query($params);
 		redirect($url);
 	}
 
 	/*
-	* The Oauth Object
+	* Get the authorization result
+	*
+	* @return array	The response
 	*/	
 	public function authorize_result()
 	{	
@@ -107,9 +108,10 @@ class Facebook
 			);
 			$graph_url = $this->oauth->ci->config->item('graph_url', 'facebook').$params;
 			$user = json_decode(file_get_contents($graph_url));
-			
+
 			return $this->oauth->response('success', array(
 					'user' => array(
+						'id'		=> $user->id,
 						'name'		=> $user->name,
 						'username'	=> $user->username,
 						'email'		=> $user->email

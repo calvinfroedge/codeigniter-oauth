@@ -21,8 +21,7 @@ class OAuth
 		$this->ci->load->config('oauth', TRUE);
 		$this->ci->lang->load('messages');
 		$this->ci->load->library('session');
-		$this->ci->load->library('email');
-		$this->ci->load->helper('cookie');
+		$this->ci->load->helper('url');
 	}
 
 	/**
@@ -79,6 +78,28 @@ class OAuth
 				return TRUE;
 		}		
 	}
+
+	/**
+	 * Parses an XML response and creates an object using SimpleXML
+	 *
+	 * @param 	string	raw xml string
+	 * @return	object	response object
+	*/		
+	public function parse_xml($xml_str)
+	{
+		$xml_str = trim($xml_str);
+		$xml_str = preg_replace('/xmlns="(.+?)"/', '', $xml_str);
+		if($xml_str[0] != '<')
+		{
+			$xml_str = explode('<', $xml_str);
+			unset($xml_str[0]);
+			$xml_str = '<'.implode('<', $xml_str);
+		}
+		
+		$xml = new SimpleXMLElement($xml_str);
+		
+		return $xml;
+	}	
 	
 	/**
 	 * Normalize the response
@@ -93,6 +114,8 @@ class OAuth
 		);
 		
 		if(isset($details['token'])) $return['token'] = $details['token'];
+		
+		if(isset($details['token2'])) $return['token2'] = $details['token2'];
 		
 		if(isset($details['error'])) $return['error'] = $details['error'];
 		

@@ -8,6 +8,26 @@ class Facebook
 	public $oauth;
 	
 	/*
+	* The Authorization Endpoint
+	*/	
+	private $_authorize_endpoint = 'https://www.facebook.com/dialog/oauth?';
+
+	/*
+	* The Access Token Endpoint
+	*/	
+	private $_access_token_endpoint = 'https://graph.facebook.com/oauth/access_token?';
+	
+	/*
+	* The Graph URL
+	*/	
+	private $_graph_url = 'https://graph.facebook.com/me?';
+	
+	/*
+	* The config array
+	*/
+	private $_config;
+	
+	/*
 	* The Constructor
 	*
 	* @param	object	The Oauth Object
@@ -15,7 +35,7 @@ class Facebook
 	public function __construct($oauth)
 	{
 		$this->oauth = $oauth;
-		$this->oauth->ci->load->config('facebook', TRUE);
+		$this->_config = $this->oauth->ci->config->item('facebook', 'oauth');
 	}
 
 	/*
@@ -27,13 +47,13 @@ class Facebook
 		$this->oauth->ci->session->set_userdata('state', $state);
 			
 		$params = array(
-			'client_id' => $this->oauth->ci->config->item('client_id', 'facebook'),
-			'redirect_uri' => $this->oauth->ci->config->item('redirect_uri', 'facebook'),
+			'client_id' => $this->_config['client_id'],
+			'redirect_uri' => $this->_config['redirect_uri'],
 			'state' => $state,
 			'scope' => 'email'
 		);
 		
-		$url = $this->oauth->ci->config->item('authorize_endpoint', 'facebook').http_build_query($params);
+		$url = $this->_authorize_endpoint.http_build_query($params);
 		redirect($url);
 	}
 
@@ -81,13 +101,13 @@ class Facebook
 	public function access($code)
 	{
 		$params = array(
-			'client_id' => $this->oauth->ci->config->item('client_id', 'facebook'),
-			'redirect_uri' => $this->oauth->ci->config->item('redirect_uri', 'facebook'),
-			'client_secret' => $this->oauth->ci->config->item('app_secret', 'facebook'),
+			'client_id' => $this->_config['client_id'],
+			'redirect_uri' => $this->_config['redirect_uri'],
+			'client_secret' => $this->_config['app_secret'],
 			'code' => $code		
 		);
 		
-		$url = $this->oauth->ci->config->item('access_token_endpoint', 'facebook').http_build_query($params);
+		$url = $this->_access_token_endpoint.http_build_query($params);
 		
 		$response = file_get_contents($url);
 		$params = null;
@@ -106,7 +126,7 @@ class Facebook
 					'access_token' => $params['access_token']
 				)
 			);
-			$graph_url = $this->oauth->ci->config->item('graph_url', 'facebook').$params;
+			$graph_url = $this->_graph_url.$params;
 			$user = json_decode(file_get_contents($graph_url));
 
 			return $this->oauth->response('success', array(

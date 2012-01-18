@@ -8,7 +8,6 @@ $config = array(
 	),
 	'twitter' => array(
 		'redirect_uri' => 'http://codeigniter.local/',
-		'oauth_consumer_key' => '',
 		'consumer_key' => '',
 		'key_secret' => ''	
 	)

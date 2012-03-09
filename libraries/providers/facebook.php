@@ -69,7 +69,7 @@ class Facebook
 			if($this->oauth->ci->session->userdata('state') !== $_GET['state'])
 			{
 				return $this->oauth->response('failure', array(
-						'error' => "You may be the victim of a cross-site forgery request."
+                        'error' => $this->oauth->ci->lang->line('error_xsfr_victim')
 					)
 				);
 			}

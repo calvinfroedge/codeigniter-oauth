@@ -72,7 +72,7 @@ class Twitter
 		if(isset($_GET['denied']))
 		{
 			return $this->oauth->response('failure', array(
-					'error' => "The user denied the request"
+                    'error' => $this->oauth->ci->lang->line('error_request_denied')
 				)
 			);
 		}

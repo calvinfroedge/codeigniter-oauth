@@ -43,7 +43,7 @@ class OAuth
 		else
 		{
 			return $this->response('failure', array(
-					'error' => 'Module or method does not exist'
+					'error' => $this->ci->lang->line('error_request_denied')
 				)
 			);
 		}

@@ -1,3 +1,5 @@
+# THIS CODE IS NO LONGER MAINTAINED. IF YOU WOULD LIKE TO BECOME THE NEW MAINTAINER FOR THIS PROJECT, PLEASE MESSAGE ME.
+
 # Codeigniter Oauth
 
 Helps you work with different Oauth providers to authorize users with your application with a single input and response format, allowing you to pass the authentication mechanism as a variable and simplify your underlying implementation.
